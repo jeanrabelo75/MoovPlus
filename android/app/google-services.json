@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "371045728628",
+    "firebase_url": "https://movplus-32b9f.firebaseio.com",
+    "project_id": "movplus-32b9f",
+    "storage_bucket": "movplus-32b9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371045728628:android:bc9905ef03d7703b17ac21",
+        "android_client_info": {
+          "package_name": "com.moovplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "371045728628-fpi3k859140kb3lm2153c4nl1h3j3p4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpBW6Kgm_NY9NlJjI77UkKcbYecG_8zkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371045728628-fpi3k859140kb3lm2153c4nl1h3j3p4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
