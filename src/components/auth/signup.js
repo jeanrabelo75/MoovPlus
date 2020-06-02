@@ -1,13 +1,27 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View, Button, Image} from 'react-native';
+import {
+  Text,
+  TextInput,
+  View,
+  Button,
+  Image,
+  Modal,
+  TouchableHighlight,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import movIcon from '../../assets/mov.png';
+import {styles} from '../css/signup';
 
 export default class SignUp extends React.Component {
-  state = {email: '', password: '', errorMessage: null};
+  state = {email: '', password: '', errorMessage: null, modalVisible: false};
 
   handleSignUp = () => {
     const {email, password} = this.state;
+
+    if (email === '' || password === '') {
+      this.setState({modalVisible: true});
+      return;
+    }
 
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -25,6 +39,7 @@ export default class SignUp extends React.Component {
 
         <TextInput
           placeholder="Email"
+          placeholderTextColor="#FFF"
           autoCapitalize="none"
           style={styles.textInput}
           onChangeText={(email) => this.setState({email})}
@@ -33,7 +48,8 @@ export default class SignUp extends React.Component {
 
         <TextInput
           secureTextEntry
-          placeholder="Password"
+          placeholder="Senha"
+          placeholderTextColor="#FFF"
           autoCapitalize="none"
           style={styles.textInput}
           onChangeText={(password) => this.setState({password})}
@@ -57,38 +73,27 @@ export default class SignUp extends React.Component {
             />
           </View>
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {}}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Dados Inválidos</Text>
+
+              <TouchableHighlight
+                style={{...styles.openButton, backgroundColor: '#1173D2'}}
+                onPress={(modalVisible) =>
+                  this.setState({modalVisible: false})
+                }>
+                <Text style={styles.textStyle}>Ok</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000000',
-  },
-
-  textInput: {
-    height: 40,
-    width: '70%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8,
-    borderRadius: 10,
-    color: '#FFFFFF',
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-
-  iconStyle: {},
-
-  buttons: {
-    marginTop: 10,
-  },
-
-  oneButton: {
-    margin: 10,
-  },
-});

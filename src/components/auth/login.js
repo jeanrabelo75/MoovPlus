@@ -1,12 +1,27 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View, Button} from 'react-native';
+import {
+  Text,
+  TextInput,
+  View,
+  Button,
+  Image,
+  Modal,
+  TouchableHighlight,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import movIcon from '../../assets/mov.png';
+import {styles} from '../css/signup';
 
 export default class Login extends React.Component {
-  state = {email: '', password: '', errorMessage: null};
+  state = {email: '', password: '', errorMessage: null, modalVisible: false};
 
   handleLogin = () => {
     const {email, password} = this.state;
+
+    if (email === '' || password === '') {
+      this.setState({modalVisible: true});
+      return;
+    }
 
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -17,51 +32,64 @@ export default class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Login</Text>
+        <Image source={movIcon} style={styles.iconStyle} />
         {this.state.errorMessage && (
           <Text style={{color: 'red'}}>{this.state.errorMessage}</Text>
         )}
 
         <TextInput
-          style={styles.textInput}
-          autoCapitalize="none"
           placeholder="Email"
+          placeholderTextColor="#FFF"
+          autoCapitalize="none"
+          style={styles.textInput}
           onChangeText={(email) => this.setState({email})}
           value={this.state.email}
         />
 
         <TextInput
           secureTextEntry
-          style={styles.textInput}
+          placeholder="Senha"
+          placeholderTextColor="#FFF"
           autoCapitalize="none"
-          placeholder="Password"
+          style={styles.textInput}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}
         />
 
-        <Button title="Login" onPress={this.handleLogin} />
+        <View style={styles.buttons}>
+          <View style={styles.oneButton}>
+            <Button title="Login" onPress={this.handleLogin} color="#1173D2" />
+          </View>
 
-        <Button
-          title="Não Possui conta? Faça o cadastro!"
-          onPress={() => this.props.navigation.navigate('SignUp')}
-        />
+          <View style={styles.buttons}>
+            <Button
+              color="#1173D2"
+              title="Não Possui conta? Faça o cadastro!"
+              onPress={() => this.props.navigation.navigate('SignUp')}
+            />
+          </View>
+        </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {}}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Dados Inválidos</Text>
+
+              <TouchableHighlight
+                style={{...styles.openButton, backgroundColor: '#1173D2'}}
+                onPress={(modalVisible) =>
+                  this.setState({modalVisible: false})
+                }>
+                <Text style={styles.textStyle}>Ok</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  textInput: {
-    height: 40,
-    width: '90%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8,
-  },
-});

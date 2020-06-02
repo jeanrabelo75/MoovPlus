@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
 export const Container = styled.View`
   background: #fff;
@@ -36,7 +36,7 @@ export const RequestButton = styled.TouchableOpacity`
   font-size: 20px;
   font-weight: 900;
   color: #fff;
-  font-family: "Mikado Bold";
+  font-family: 'Mikado Bold';
 `;
 
 export const RequestButtonText = styled.Text`
