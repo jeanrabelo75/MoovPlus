@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View, Button} from 'react-native';
+import {StyleSheet, Text, TextInput, View, Button, Image} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import movIcon from '../../assets/mov.png';
 
 export default class SignUp extends React.Component {
   state = {email: '', password: '', errorMessage: null};
@@ -17,7 +18,7 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Sign Up</Text>
+        <Image source={movIcon} style={styles.iconStyle} />
         {this.state.errorMessage && (
           <Text style={{color: 'red'}}>{this.state.errorMessage}</Text>
         )}
@@ -39,12 +40,23 @@ export default class SignUp extends React.Component {
           value={this.state.password}
         />
 
-        <Button title="Cadastrar" onPress={this.handleSignUp} />
+        <View style={styles.buttons}>
+          <View style={styles.oneButton}>
+            <Button
+              title="Cadastre-se"
+              onPress={this.handleSignUp}
+              color="#1173D2"
+            />
+          </View>
 
-        <Button
-          title="Já possui conta? Faça o Login"
-          onPress={() => this.props.navigation.navigate('Login')}
-        />
+          <View style={styles.buttons}>
+            <Button
+              color="#1173D2"
+              title="Já possui conta? Faça o Login"
+              onPress={() => this.props.navigation.navigate('Login')}
+            />
+          </View>
+        </View>
       </View>
     );
   }
@@ -55,13 +67,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000000',
   },
 
   textInput: {
     height: 40,
-    width: '90%',
+    width: '70%',
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 8,
+    borderRadius: 10,
+    color: '#FFFFFF',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+
+  iconStyle: {},
+
+  buttons: {
+    marginTop: 10,
+  },
+
+  oneButton: {
+    margin: 10,
   },
 });
