@@ -9,6 +9,7 @@ const Directions = ({destination, origin, onReady}) => (
     apikey="AIzaSyDqnA4clAnRQs89qfNdccBWv7KACcgDc04"
     strokeWidth={3}
     strokeColor="#222"
+    mode="DRIVING"
   />
 );
 

@@ -1,10 +1,11 @@
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, Image, View, PermissionsAndroid} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import React, {Fragment} from 'react';
 import MapView, {Marker} from 'react-native-maps';
 import Search from '../map/search';
 import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
 
 import Directions from '../map/directions';
 import Details from '../map/details';
@@ -29,36 +30,55 @@ export default class Main extends React.Component {
     destination: null,
     duration: null,
     location: null,
+    permissionGranted: true,
+    waypoints: null,
   };
 
   async componentDidMount() {
     const {currentUser} = auth();
     this.setState({currentUser});
 
-    navigator.geolocation.getCurrentPosition(
-      async ({coords: {latitude, longitude}}) => {
-        const response = await Geocoder.from({latitude, longitude});
-        const address = response.results[0].formatted_address;
-        const location = address.substring(0, address.indexOf(','));
-
-        this.setState({
-          location,
-          region: {
-            latitude,
-            longitude,
-            latitudeDelta: 0.0143,
-            longitudeDelta: 0.0134,
-          },
-        });
-      },
-
-      () => {},
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
-        timeout: 2000,
-        enableHighAccuracy: true,
-        maximumAge: 1000,
+        title: 'Permissão de Localização',
+        message: 'Você deseja deixar o MOV + acessar sua localização?',
       },
     );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      this.setState({permissionGranted: false});
+    }
+
+    if (this.state.permissionGranted) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            region: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: 0.0143,
+              longitudeDelta: 0.0134,
+            },
+          });
+          Geocoder.from(
+            position.coords.latitude,
+            position.coords.longitude,
+          ).then((json) => {
+            const address = json.results[0].formatted_address;
+            const location = address.substring(0, address.indexOf(','));
+            this.setState({location});
+          });
+        },
+        (error) => {
+          console.log(error.code, error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+        },
+      );
+    }
   }
 
   handleLocationSelected = (data, {geometry}) => {
@@ -79,6 +99,18 @@ export default class Main extends React.Component {
     this.setState({destination: null});
   };
 
+  getWaypoints = (coordinates) => {
+    let samplesWaypoints = [];
+    const totalWaypoints = Math.floor(coordinates.length * 0.1);
+    const intervalWaypoints = Math.floor(coordinates.length / totalWaypoints);
+
+    for (let i = 0; i < coordinates.length; i += intervalWaypoints) {
+      samplesWaypoints.push(coordinates[i]);
+    }
+
+    this.setState({waypoints: samplesWaypoints});
+  };
+
   render() {
     const {region, destination, duration, location} = this.state;
 
@@ -89,7 +121,7 @@ export default class Main extends React.Component {
           region={region}
           showsUserLocation={true}
           loadingEnabled={true}
-          ref={(el) => (this.mapView = el)}>
+          ref={(element) => (this.mapView = element)}>
           {destination && (
             <Fragment>
               <Directions
@@ -97,12 +129,12 @@ export default class Main extends React.Component {
                 destination={destination}
                 onReady={(result) => {
                   this.setState({duration: Math.floor(result.duration)});
-
+                  this.getWaypoints(result.coordinates);
                   this.mapView.fitToCoordinates(result.coordinates, {
                     edgePadding: {
-                      right: getPixelSize(50),
-                      left: getPixelSize(50),
-                      top: getPixelSize(50),
+                      right: getPixelSize(350),
+                      left: getPixelSize(350),
+                      top: getPixelSize(350),
                       bottom: getPixelSize(350),
                     },
                   });
@@ -139,7 +171,7 @@ export default class Main extends React.Component {
               <Image source={backImage} />
             </Back>
 
-            <Details />
+            <Details waypoints={this.state.waypoints} />
           </Fragment>
         ) : (
           <Search onLocationSelected={this.handleLocationSelected} />

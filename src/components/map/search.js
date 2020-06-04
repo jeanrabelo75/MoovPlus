@@ -36,7 +36,7 @@ export default class Search extends Component {
         styles={{
           container: {
             position: 'absolute',
-            top: Platform.select({ios: 60, android: 40}),
+            marginTop: Platform.select({ios: 60, android: 40}),
             width: '100%',
           },
           textInputContainer: {
@@ -64,13 +64,13 @@ export default class Search extends Component {
             shadowOffset: {x: 0, y: 0},
             shadowRadius: 15,
             borderWidth: 1,
-            borderColor: '#DDD',
+            borderColor: '#1173D2',
             fontSize: 18,
           },
           listView: {
             borderWidth: 1,
-            borderColor: '#DDD',
-            backgroundColor: '#FFF',
+            borderColor: '#1173D2',
+            backgroundColor: '#1173D2',
             marginHorizontal: 20,
             elevation: 5,
             shadowColor: '#000',
