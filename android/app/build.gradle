@@ -145,6 +145,12 @@ android {
         }
     }
     signingConfigs {
+        release {
+            storeFile file('your_key_name.keystore')
+            storePassword 'aplicativomov123'
+            keyAlias 'my-key-alias'
+            keyPassword 'aplicativomov123'
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'

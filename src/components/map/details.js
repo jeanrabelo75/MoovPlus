@@ -1,7 +1,7 @@
+import Axios from 'axios';
 import React, {Component} from 'react';
 import {Dimensions} from 'react-native';
 import {Container, TypeTitle} from '../css/details';
-import Axios from 'axios';
 import LineChart from 'react-native-chart-kit/src/line-chart';
 
 export default class Details extends Component {
