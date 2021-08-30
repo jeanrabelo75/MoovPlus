@@ -19,7 +19,7 @@ export default class Details extends Component {
     snapshot: SS,
   ) {
     const wayPoints = this.props.waypoints;
-    const API_KEY = 'AIzaSyDqnA4clAnRQs89qfNdccBWv7KACcgDc04';
+    const API_KEY = '';
     let waypointsAPI = '';
 
     for (let i = 0; i < wayPoints.length; i++) {
