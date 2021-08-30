@@ -22,7 +22,7 @@ import {
   Back,
 } from '../css/map';
 
-Geocoder.init('AIzaSyDqnA4clAnRQs89qfNdccBWv7KACcgDc04');
+Geocoder.init('');
 
 export default class Main extends React.Component {
   state = {
